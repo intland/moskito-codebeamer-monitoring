@@ -1,0 +1,76 @@
+{
+    "@thresholdsAlertsConfig": {
+        "@notificationProviders": [
+            {
+                "className": "net.anotheria.moskito.core.threshold.alerts.notificationprovider.LogFileNotificationProvider",
+                "appenderName": "MoskitoAlert",
+                "guardedStatus": "GREEN"
+            }
+        ],
+
+        "@alertHistoryConfig": {
+            "maxNumberOfItems": 500,
+            "toleratedNumberOfItems": 550
+        }
+    },
+
+    "@accumulatorsConfig" : {
+      "accumulationAmount": 4140,
+      "@accumulatorSets": [],
+      "@accumulatorsColors": [],
+      "@accumulators": []
+    },
+    "@thresholdsConfig": {
+          "@thresholds": []
+    },
+
+    "@gaugesConfig": {
+        "@gauges": [],
+      "@defaultZones":[
+        {
+          "color": "orange",
+          "left": 0.85,
+          "right": 0.9
+        },
+        {
+          "color": "red",
+          "left": 0.9,
+          "right": 1
+        }
+      ]
+
+    },
+
+    "@pluginsConfig": {
+        "@plugins": [
+        	{
+                "name": "CodeBeamerMonitoringPlugin",
+                "configurationName": "none",
+                "className": "net.anotheria.moskito.extensions.CodeBeamerPlugin"
+            },
+        	{
+                "name": "DiskSpaceMonitoringPlugin",
+                "configurationName": "none",
+                "className": "net.anotheria.moskito.extensions.DiskSpaceMonitoringPlugin"
+            }
+        ]
+    },
+
+    "@tracingConfig": {
+      "tracingEnabled": true,
+      "loggingEnabled": true,
+      "inspectEnabled": true,
+      "maxTraces": 50,
+      "tracers": []
+    },
+    "@filterConfig": {
+      "caseExtractors": [
+        "net.anotheria.moskito.web.filters.caseextractor.RequestURICaseExtractor",
+        "net.anotheria.moskito.web.filters.caseextractor.RefererCaseExtractor",
+        "net.anotheria.moskito.web.filters.caseextractor.MethodCaseExtractor",
+        "net.anotheria.moskito.web.filters.caseextractor.UserAgentCaseExtractor",
+        "net.anotheria.moskito.web.filters.caseextractor.DomainCaseExtractor"
+    ]
+  }
+
+}

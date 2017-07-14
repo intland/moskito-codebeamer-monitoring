@@ -1,0 +1,237 @@
+{
+	"mBeanServers" : [{
+			"name" : "Production",
+			"host" : "<host>",
+			"port" : "<port>",
+			"username" : "<username>",
+			"password" : "<password>",
+			"mBeans" : [{
+					"mBeanName" : "com.intland.codebeamer.mbeans:name=responseTimeInfo",
+					"mBeanId" : "CB",
+					"attributes" : [{
+							"attribute" : "Average",
+							"type" : "long",
+							"statName" : "Response Time Average",
+							"prefix" : "",
+							"suffix" : " ms",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "Min",
+							"type" : "long",
+							"statName" : "Minimum Response Time",
+							"prefix" : "",
+							"suffix" : " ms",
+							"decimalPlaces" : "0",
+							"value" : "this.y",
+							"additionalInfo" : "Production:CB:Path of Minimum Response Time"
+						}, {
+							"attribute" : "Max",
+							"type" : "long",
+							"statName" : "Maximum Response Time",
+							"prefix" : "",
+							"suffix" : " ms",
+							"decimalPlaces" : "0",
+							"value" : "this.y",
+							"additionalInfo" : "Production:CB:Path of Maximum Response Time"
+						}, {
+							"attribute" : "MinPath",
+							"type" : "string",
+							"statName" : "Path of Minimum Response Time"
+						}, {
+							"attribute" : "MaxPath",
+							"type" : "string",
+							"statName" : "Path of Maximum Response Time"
+						}, {
+							"attribute" : "ActiveConnections",
+							"type" : "long",
+							"statName" : "Database Active Connections",
+							"prefix" : "",
+							"suffix" : "",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "IdleConnections",
+							"type" : "long",
+							"statName" : "Database Idle Connections",
+							"prefix" : "",
+							"suffix" : "",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "ActiveThreads",
+							"type" : "long",
+							"statName" : "Active Threads",
+							"prefix" : "",
+							"suffix" : "",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "AvailableThreads",
+							"type" : "long",
+							"statName" : "Available Threads",
+							"prefix" : "",
+							"suffix" : "",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "FreeMemory",
+							"type" : "long",
+							"statName" : "Free Memory Size",
+							"prefix" : "",
+							"suffix" : " Mb",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "TotalMemory",
+							"type" : "long",
+							"statName" : "Total Memory Size",
+							"prefix" : "",
+							"suffix" : " Mb",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "MaxMemory",
+							"type" : "long",
+							"statName" : "Maximum Memory Size",
+							"prefix" : "",
+							"suffix" : " Mb",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "CommittedVirtualMemorySize",
+							"type" : "long",
+							"statName" : "Committed Virtual Memory Size",
+							"prefix" : "",
+							"suffix" : " Mb",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "RequestsCount",
+							"type" : "long",
+							"statName" : "Requests Count",
+							"prefix" : "",
+							"suffix" : "",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "EmailsCount",
+							"type" : "long",
+							"statName" : "Emails Count",
+							"prefix" : "",
+							"suffix" : "",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "QueriesCount",
+							"type" : "long",
+							"statName" : "Queries Count",
+							"prefix" : "",
+							"suffix" : "",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "SlowQueriesCount",
+							"type" : "long",
+							"statName" : "Slow Queries Count",
+							"prefix" : "",
+							"suffix" : "",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "SlowRequestsCount",
+							"type" : "long",
+							"statName" : "Slow Requests Count",
+							"prefix" : "",
+							"suffix" : "",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "LoggedInUsers",
+							"type" : "long",
+							"statName" : "Logged In Users",
+							"prefix" : "",
+							"suffix" : "",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "FreeSpace",
+							"type" : "long",
+							"statName" : "Free Space",
+							"prefix" : "",
+							"suffix" : " Gb",
+							"decimalPlaces" : "0",
+							"value" : "this.y"
+						}, {
+							"attribute" : "LicensesInfo",
+							"type" : "licenseInfo",
+							"statName" : "License Info"
+						}
+					]
+				},
+				{
+					"mBeanName" : "java.lang:type=OperatingSystem",
+					"mBeanId" : "JVM",
+					"attributes" : [{
+							"attribute" : "SystemCpuLoad",
+							"type" : "double",
+							"statName" : "System Cpu Load",
+							"prefix" : "",
+							"suffix" : " %",
+							"decimalPlaces" : "0",
+							"value" : "this.y * 100"
+						}
+					]
+				}
+			]
+		}
+	],
+	"dashboards" : [{
+			"name" : "Production Server",
+			"charts" : [{
+					"caption" : "Threads & Requests Count", 
+					"accumulatorNames" : ["Production CB Requests Count", "Production CB Active Threads", "Production CB Available Threads"]
+				},
+				{
+					"caption" : "Database Connections Count", 
+					"accumulatorNames" : ["Production CB Active Connections", "Production CB Idle Connections"]
+				},
+				{
+					"caption" : "Response Time", 
+					"accumulatorNames" : ["Production CB Response Time Average", "Production CB Maximum Response Time"]
+				},
+				{
+					"caption" : "Emails Count", 
+					"accumulatorNames" : ["Production CB Emails Count"]
+				},
+				{
+					"caption" : "Queries Count", 
+					"accumulatorNames" : ["Production CB Queries Count"]
+				},
+				{
+					"caption" : "Slow Queries & Requests Count", 
+					"accumulatorNames" : ["Production CB Slow Queries Count", "Production CB Slow Requests Count"]
+				},
+				{
+					"caption" : "Logged in Users", 
+					"accumulatorNames" : ["Production CB Logged In Users"]
+				},
+				{
+					"caption" : "Memory", 
+					"accumulatorNames" : ["Production CB Free Memory Size", "Production CB Total Memory Size", "Production CB Maximum Memory Size", "Production CB Committed Virtual Memory Size"]
+				},
+				{
+					"caption" : "Free Space", 
+					"accumulatorNames" : ["Production CB Free Space"]
+				},
+				{
+					"caption" : "System CPU Load", 
+					"accumulatorNames" : ["Production JVM System Cpu Load"]
+				}
+			]
+		}
+	],
+	"dataFilePath": "<history-file>",
+	"exportPeriod": 60,
+	"sizeOfHistory": 4140
+}
