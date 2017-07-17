@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 public enum FormatterAttribute {
 
-	NAME("statName"), PREFIX("prefix"), SUFFIX("suffix"), DECIMAL_PLACES("decimalPlaces"), VALUE("value");
+	NAME("statName"), PREFIX("prefix"), SUFFIX("suffix"), DECIMAL_PLACES("decimalPlaces"), VALUE("value"), ADDITIONAL_VALUE_FORMAT("additionalValueFormat");
 	
 	private String name;
 	

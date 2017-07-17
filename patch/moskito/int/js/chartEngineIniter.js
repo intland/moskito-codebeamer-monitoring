@@ -175,7 +175,7 @@ var chartEngineIniter = {
 						var prefix = '';
 						var suffix = '';
 						var decimalPlaces = 0;
-						var value = '';
+						var value = this.y;
 						if (formatters.hasOwnProperty(this.series.name)) {
 							if (formatters[this.series.name].hasOwnProperty("PREFIX")) {
 								prefix = formatters[this.series.name].PREFIX;
@@ -187,15 +187,15 @@ var chartEngineIniter = {
 								decimalPlaces = parseInt(formatters[this.series.name].DECIMAL_PLACES);
 							}
 							if (formatters[this.series.name].hasOwnProperty("VALUE")) {
-								value = eval(formatters[this.series.name].VALUE);
+								calculatedValue = eval(formatters[this.series.name].VALUE);
 							}
 						}
 						s += ': <b>'
 						s += prefix;
-						if (value == '') {
+						if (calculatedValue == null || calculatedValue == '') {
 							s += this.y;
 						} else {
-							s += Highcharts.numberFormat((value),decimalPlaces,'.');
+							s += Highcharts.numberFormat((calculatedValue),decimalPlaces,'.');
 						}
 						s += suffix;
 						s += '</b>';
@@ -205,21 +205,25 @@ var chartEngineIniter = {
 							for (var accumulator in accumulators) {
 								var tmp = new Date(this.x);
 								var key = new Date().setTime(tmp.getTime() + tmp.getTimezoneOffset()*60*1000);
-								var value = '';
 								jQuery.ajax({
 									type: "POST",
 									url: contextPath + "/additionalInfo",
 									success: function (result) {
 										if (result.hasOwnProperty(accumulator)) {
-											value = result[accumulator];
+											var value = result[accumulator].value;
+											if (value != null && value != '' && value != 'null') {
+												var calculatedValue = eval(result[accumulator].format);
+												if (calculatedValue == null || calculatedValue == '') {
+													s += accumulators[accumulator] + ': <b>' + value + '</b><br/>';
+												} else {
+													s += accumulators[accumulator] + ': <b>' + calculatedValue + '</b><br/>';
+												}
+											}
 										}
 									},
 									async: false,
 									data : {additionalAccumulatorName: accumulator, timestamp: key}
 								});
-								if (!!value) {
-									s += accumulators[accumulator] + ': <b>' + value + '</b><br/>';
-								}
 							}
 							s += '<br/>';
 						}

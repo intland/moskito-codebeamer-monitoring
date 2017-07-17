@@ -15,9 +15,14 @@ public enum AdditionalInfo {
 	
 	private Map<String, Map<String, String>> additionalInfoForAccumulators = new HashMap<String, Map<String, String>>();
 	private List<Accumulator> accumulators = null;
+	private Map<String, String> additionalInfoAccumulators = new HashMap<String, String>();
 	
 	public void addAdditionalInfo(String accumulatorName, Map<String, String> additionalInfoAccumulatorName) {
 		additionalInfoForAccumulators.put(accumulatorName, additionalInfoAccumulatorName);
+	}
+	
+	public void addAdditionalInfoAccumulator(String accumulatorName, String format) {
+		additionalInfoAccumulators.put(accumulatorName, format);
 	}
 
 	public void setAccumulators(List<Accumulator> accumulators) {
@@ -28,8 +33,8 @@ public enum AdditionalInfo {
 		return additionalInfoForAccumulators;
 	}
 	
-	public Map<String, String> getAdditionalInfoForAccumulator(String additionalAccumulatorName, String timestamp) {
-		Map<String, String> result = new HashMap<String, String>();
+	public Map<String, Map<String, String>> getAdditionalInfoForAccumulator(String additionalAccumulatorName, String timestamp) {
+		Map<String, Map<String, String>> result = new HashMap<String, Map<String, String>>();
 		long timestampInLong = Long.valueOf(timestamp);
 		for (Accumulator accumulator : accumulators) {
 			if (accumulator.getName().equalsIgnoreCase(additionalAccumulatorName)) {
@@ -43,7 +48,10 @@ public enum AdditionalInfo {
 
 			        // check cal
 					if (cal.getTimeInMillis() == timestampInLong) {
-						result.put(additionalAccumulatorName, accumulatedValue.getValue());
+						Map<String, String> data = new HashMap<String, String>();
+						data.put("value", accumulatedValue.getValue());
+						data.put("format", additionalInfoAccumulators.get(additionalAccumulatorName));
+						result.put(additionalAccumulatorName, data);
 					}
 				}
 				break;

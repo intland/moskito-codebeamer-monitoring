@@ -15,7 +15,7 @@
 							"prefix" : "",
 							"suffix" : " ms",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "Min",
 							"type" : "long",
@@ -23,8 +23,8 @@
 							"prefix" : "",
 							"suffix" : " ms",
 							"decimalPlaces" : "0",
-							"value" : "this.y",
-							"additionalInfo" : "Production:CB:Path of Minimum Response Time"
+							"value" : "value",
+							"additionalInfo" : "Production:CB:Path of Minimum Response Time,Production:CB:Request Id of Minimum Response Time"
 						}, {
 							"attribute" : "Max",
 							"type" : "long",
@@ -32,16 +32,26 @@
 							"prefix" : "",
 							"suffix" : " ms",
 							"decimalPlaces" : "0",
-							"value" : "this.y",
-							"additionalInfo" : "Production:CB:Path of Maximum Response Time"
+							"value" : "value",
+							"additionalInfo" : "Production:CB:Path of Maximum Response Time,Production:CB:Request Id of Maximum Response Time"
 						}, {
 							"attribute" : "MinPath",
 							"type" : "string",
-							"statName" : "Path of Minimum Response Time"
+							"statName" : "Path of Minimum Response Time",
+							"value" : "value.substring(new RegExp('^(http).*/cb/').exec(value)[0].length)"
 						}, {
 							"attribute" : "MaxPath",
 							"type" : "string",
-							"statName" : "Path of Maximum Response Time"
+							"statName" : "Path of Maximum Response Time",
+							"value" : "value.substring(new RegExp('^(http).*/cb/').exec(value)[0].length)"
+						}, {
+							"attribute" : "RequestIdMin",
+							"type" : "string",
+							"statName" : "Request Id of Minimum Response Time"
+						}, {
+							"attribute" : "RequestIdMax",
+							"type" : "string",
+							"statName" : "Request Id of Maximum Response Time"
 						}, {
 							"attribute" : "ActiveConnections",
 							"type" : "long",
@@ -49,7 +59,7 @@
 							"prefix" : "",
 							"suffix" : "",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "IdleConnections",
 							"type" : "long",
@@ -57,7 +67,7 @@
 							"prefix" : "",
 							"suffix" : "",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "ActiveThreads",
 							"type" : "long",
@@ -65,7 +75,7 @@
 							"prefix" : "",
 							"suffix" : "",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "AvailableThreads",
 							"type" : "long",
@@ -73,7 +83,7 @@
 							"prefix" : "",
 							"suffix" : "",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "FreeMemory",
 							"type" : "long",
@@ -81,7 +91,7 @@
 							"prefix" : "",
 							"suffix" : " Mb",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "TotalMemory",
 							"type" : "long",
@@ -89,7 +99,7 @@
 							"prefix" : "",
 							"suffix" : " Mb",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "MaxMemory",
 							"type" : "long",
@@ -97,7 +107,7 @@
 							"prefix" : "",
 							"suffix" : " Mb",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "CommittedVirtualMemorySize",
 							"type" : "long",
@@ -105,7 +115,7 @@
 							"prefix" : "",
 							"suffix" : " Mb",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "RequestsCount",
 							"type" : "long",
@@ -113,7 +123,7 @@
 							"prefix" : "",
 							"suffix" : "",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "EmailsCount",
 							"type" : "long",
@@ -121,7 +131,7 @@
 							"prefix" : "",
 							"suffix" : "",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "QueriesCount",
 							"type" : "long",
@@ -129,7 +139,7 @@
 							"prefix" : "",
 							"suffix" : "",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "SlowQueriesCount",
 							"type" : "long",
@@ -137,7 +147,7 @@
 							"prefix" : "",
 							"suffix" : "",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "SlowRequestsCount",
 							"type" : "long",
@@ -145,7 +155,7 @@
 							"prefix" : "",
 							"suffix" : "",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "LoggedInUsers",
 							"type" : "long",
@@ -153,7 +163,7 @@
 							"prefix" : "",
 							"suffix" : "",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "FreeSpace",
 							"type" : "long",
@@ -161,7 +171,7 @@
 							"prefix" : "",
 							"suffix" : " Gb",
 							"decimalPlaces" : "0",
-							"value" : "this.y"
+							"value" : "value"
 						}, {
 							"attribute" : "LicensesInfo",
 							"type" : "licenseInfo",
@@ -179,7 +189,7 @@
 							"prefix" : "",
 							"suffix" : " %",
 							"decimalPlaces" : "0",
-							"value" : "this.y * 100"
+							"value" : "value * 100"
 						}
 					]
 				}

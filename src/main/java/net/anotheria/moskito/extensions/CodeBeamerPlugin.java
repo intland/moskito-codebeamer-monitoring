@@ -384,6 +384,9 @@ public class CodeBeamerPlugin extends AbstractMoskitoPlugin {
     					log.info("Add additional info: " + generatedAccNames.toString());
     					AdditionalInfo.INSTANCE.addAdditionalInfo(String.format("%s %s %s", mBeanServerName, mBeanId, attributeName), generatedAccNames);
     				}
+    				if (StringUtils.isNotEmpty(attribute.getValue())) {
+    					AdditionalInfo.INSTANCE.addAdditionalInfoAccumulator(String.format("%s %s %s", mBeanServerName, mBeanId, attributeName), attribute.getValue());
+    				}
     			}
     		}
     	}
