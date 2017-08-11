@@ -189,10 +189,12 @@ var chartEngineIniter = {
 							if (formatters[this.series.name].hasOwnProperty("VALUE")) {
 								calculatedValue = eval(formatters[this.series.name].VALUE);
 							}
+						} else {
+							calculatedValue = undefined;
 						}
 						s += ': <b>'
 						s += prefix;
-						if (calculatedValue == null || calculatedValue == '') {
+						if (typeof calculatedValue === 'undefined' || calculatedValue == null || calculatedValue == '') {
 							s += this.y;
 						} else {
 							s += Highcharts.numberFormat((calculatedValue),decimalPlaces,'.');

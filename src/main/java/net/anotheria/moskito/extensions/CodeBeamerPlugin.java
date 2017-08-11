@@ -4,11 +4,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.configureme.util.IOUtils;
@@ -356,7 +360,7 @@ public class CodeBeamerPlugin extends AbstractMoskitoPlugin {
 			}, DATA_EXPORT_DELAY, pluginConfig.getExportPeriod() * 1000l);
 			
 			// create dashboards
-			createDashboards(pluginConfig);
+			createDashboards(pluginConfig, accumulators);
 		} catch (Exception ex) {
 			log.error("Error occurred when tried to parse configuration file.", ex);
 		}
@@ -392,22 +396,43 @@ public class CodeBeamerPlugin extends AbstractMoskitoPlugin {
     	}
     }
     
-	private void createDashboards(final PluginConfig pluginConfig) {
+	private void createDashboards(final PluginConfig pluginConfig, final List<Accumulator> accumulators) {
 		// wait for creating dashboards
 		new Timer().schedule(new TimerTask() {
 			
 			@Override
 			public void run() {
+				// Collect created accumulator names
+				Set<String> createdAccumulatorNames = new HashSet<String>();
+				if (CollectionUtils.isNotEmpty(accumulators)) {
+					for (Accumulator accumulator : accumulators) {
+						createdAccumulatorNames.add(accumulator.getName());
+					}
+				}
+				log.info("Created accumulator names: " + createdAccumulatorNames);
 				DashboardAPI api = APIFinder.findAPI(DashboardAPI.class);
+				// create dashboards
 				for (Dashboard dashboard : pluginConfig.getDashboards()) {
 					try {
 						String name = dashboard.getName();
 						log.info("Create dashboard: " + name);
 						api.createDashboard(name);
 						List<String> chartCaptions = new ArrayList<>();
+						// create charts
 						for (Chart chart : dashboard.getCharts()) {
 							String[] accumulatorNames = chart.getAccumulatorNames();
-							api.addChartToDashboard(name, accumulatorNames);
+							// filter accumulators
+							List<String> filteredAccumulatorNames = new ArrayList<String>();
+							if (ArrayUtils.isNotEmpty(accumulatorNames)) {
+								for (String accumulatorName : accumulatorNames) {
+									if (createdAccumulatorNames.contains(accumulatorName)) {
+										// accumulator created so it can be displayed on chart
+										filteredAccumulatorNames.add(accumulatorName);
+									}
+								}
+							}
+							log.info("add accumulators to chart: " + chart.getCaption() + ", accumulators: " + filteredAccumulatorNames);
+							api.addChartToDashboard(name, filteredAccumulatorNames.toArray(new String[filteredAccumulatorNames.size()]));
 							chartCaptions.add(chart.getCaption());
 						}
 						DashboardConfig dashboardConfig = api.getDashboardConfig(name);

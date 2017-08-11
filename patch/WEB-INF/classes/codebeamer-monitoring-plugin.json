@@ -204,7 +204,7 @@
 				},
 				{
 					"caption" : "Database Connections Count", 
-					"accumulatorNames" : ["Production CB Active Connections", "Production CB Idle Connections"]
+					"accumulatorNames" : ["Production CB Database Active Connections", "Production CB Database Idle Connections"]
 				},
 				{
 					"caption" : "Response Time", 
@@ -223,8 +223,19 @@
 					"accumulatorNames" : ["Production CB Slow Queries Count", "Production CB Slow Requests Count"]
 				},
 				{
-					"caption" : "Logged in Users", 
-					"accumulatorNames" : ["Production CB Logged In Users"]
+					"caption" : "Logged in Users & Licenses Info", 
+					"accumulatorNames" : 
+						[
+							"Production CB Logged In Users", 
+						 	"Production CB LicensesInfo Collab User Floating License", 
+						 	"Production CB LicensesInfo ALM User Floating License", 
+						 	"Production CB LicensesInfo CM User Floating License", 
+						 	"Production CB LicensesInfo RM User Floating License", 
+						 	"Production CB LicensesInfo QA-Test User Floating License", 
+						 	"Production CB LicensesInfo RH User Floating License", 
+						 	"Production CB LicensesInfo SD User Floating License", 
+						 	"Production CB LicensesInfo AG User Floating License"
+						 ]
 				},
 				{
 					"caption" : "Memory", 

@@ -30,6 +30,7 @@ public enum MBeanProducer {
 	
 	private Object lock = new Object();
 	private static Logger log = LoggerFactory.getLogger(MBeanProducer.class);
+	private static final int THRESHOLD = 3;
 	
 	private List<MBeanServer> mBeanServers = new ArrayList<MBeanServer>();
 	
@@ -120,59 +121,70 @@ public enum MBeanProducer {
 			for (MBeanServer mBeanServer : mBeanServers) {
 				MBeanServerConnection server = null;
 				JMXConnector jmxConnector = null;
-				try {
-					String url = "service:jmx:rmi:///jndi/rmi://" + mBeanServer.getHost() + ":" + mBeanServer.getPort() + "/jmxrmi";
-					JMXServiceURL serviceUrl = new JMXServiceURL(url);
-					Map<String, String[]> env = null;
-					
-					if (StringUtils.isNotEmpty(mBeanServer.getUsername()) && StringUtils.isNotEmpty(mBeanServer.getPassword())) {
-						env = new HashMap<String, String[]>();
-						String[] credentials = {mBeanServer.getUsername(), mBeanServer.getPassword()};
-						env.put(JMXConnector.CREDENTIALS, credentials);
-					}
-					
-					jmxConnector = JMXConnectorFactory.connect(serviceUrl, env);
-					
-				    server = jmxConnector.getMBeanServerConnection();
-
-				    for (MBean mBean : mBeanServer.getmBeans()) {
-				    
-				    	ObjectName objectName = new ObjectName(mBean.getName());
-				    	log.info("object name: " + objectName.getCanonicalName());
-				    	if (server.isRegistered(objectName)) {
-				    		log.info("object is found");
-						    AttributeList attributeList = server.getAttributes(objectName, mBean.getAttributes().keySet().toArray(new String[0]));
-							if (attributeList != null && CollectionUtils.isNotEmpty(attributeList.asList())) {
-								Map<String, Object> attributeMap = new HashMap<String, Object>();
-								for (Attribute attribute : attributeList.asList()) {
-									attributeMap.put(attribute.getName(), String.valueOf(attribute.getValue()));
-								}
-								log.info("add mbean to the mbeans container");
-								MBean newMbean = new MBean(mBean.getName(), attributeMap);
-								log.info("mbean: " + ReflectionToStringBuilder.toString(newMbean));
-								if (!mBeans.containsKey(mBeanServer.getName())) {
-									mBeans.put(mBeanServer.getName(), new ConcurrentHashMap<String, MBean>());
-								}
-								Map<String, MBean> mBeansByServer = mBeans.get(mBeanServer.getName());
-								mBeansByServer.put(newMbean.getName(), newMbean);
-								log.info("mbeans container after put new mbean:");
-								for (Entry<String, Map<String, MBean>> entry : mBeans.entrySet()) {
-									log.info("server: " + entry.getKey());
-									for (Entry<String, MBean> mbean : entry.getValue().entrySet()) {
-										log.info("mbean in container: " + ReflectionToStringBuilder.toString(mbean));
+				for (int i = 0; i < THRESHOLD; ++i) {
+					try {
+						String url = "service:jmx:rmi:///jndi/rmi://" + mBeanServer.getHost() + ":" + mBeanServer.getPort() + "/jmxrmi";
+						JMXServiceURL serviceUrl = new JMXServiceURL(url);
+						Map<String, String[]> env = null;
+						
+						if (StringUtils.isNotEmpty(mBeanServer.getUsername()) && StringUtils.isNotEmpty(mBeanServer.getPassword())) {
+							env = new HashMap<String, String[]>();
+							String[] credentials = {mBeanServer.getUsername(), mBeanServer.getPassword()};
+							env.put(JMXConnector.CREDENTIALS, credentials);
+						}
+						
+						jmxConnector = JMXConnectorFactory.connect(serviceUrl, env);
+						
+					    server = jmxConnector.getMBeanServerConnection();
+	
+					    for (MBean mBean : mBeanServer.getmBeans()) {
+					    
+					    	ObjectName objectName = new ObjectName(mBean.getName());
+					    	log.info("object name: " + objectName.getCanonicalName());
+					    	if (server.isRegistered(objectName)) {
+					    		log.info("object is found");
+							    AttributeList attributeList = server.getAttributes(objectName, mBean.getAttributes().keySet().toArray(new String[0]));
+								if (attributeList != null && CollectionUtils.isNotEmpty(attributeList.asList())) {
+									Map<String, Object> attributeMap = new HashMap<String, Object>();
+									for (Attribute attribute : attributeList.asList()) {
+										attributeMap.put(attribute.getName(), String.valueOf(attribute.getValue()));
+									}
+									log.info("add mbean to the mbeans container");
+									MBean newMbean = new MBean(mBean.getName(), attributeMap);
+									log.info("mbean: " + ReflectionToStringBuilder.toString(newMbean));
+									if (!mBeans.containsKey(mBeanServer.getName())) {
+										mBeans.put(mBeanServer.getName(), new ConcurrentHashMap<String, MBean>());
+									}
+									Map<String, MBean> mBeansByServer = mBeans.get(mBeanServer.getName());
+									mBeansByServer.put(newMbean.getName(), newMbean);
+									log.info("mbeans container after put new mbean:");
+									for (Entry<String, Map<String, MBean>> entry : mBeans.entrySet()) {
+										log.info("server: " + entry.getKey());
+										for (Entry<String, MBean> mbean : entry.getValue().entrySet()) {
+											log.info("mbean in container: " + ReflectionToStringBuilder.toString(mbean));
+										}
 									}
 								}
+					    	}
+					    }
+					    break;
+					} catch (Exception ex) {
+			    		log.error("Error occurred when tried to otain MBean attributes.", ex);
+			    		if (i <  THRESHOLD - 1) {
+				    		try {
+				    			// wait one second and try to connect to the server again
+				    		    Thread.sleep(1000);
+				    		} catch(InterruptedException iex) {
+				    		    Thread.currentThread().interrupt();
+				    		}
+			    		}
+			    	} finally {
+						if (jmxConnector != null) {
+							try {
+								jmxConnector.close();
+							} catch (IOException ex) {
+								log.error("Error occurred when tried to close jmxConnector.", ex);
 							}
-				    	}
-				    }
-				} catch (Exception ex) {
-		    		log.error("Error occurred when tried to otain MBean attributes.", ex);
-		    	} finally {
-					if (jmxConnector != null) {
-						try {
-							jmxConnector.close();
-						} catch (IOException ex) {
-							log.error("Error occurred when tried to close jmxConnector.", ex);
 						}
 					}
 				}
