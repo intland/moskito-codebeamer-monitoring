@@ -165,7 +165,8 @@ var chartEngineIniter = {
 			tooltip: {
 				formatter: function () {
 					var s = Highcharts.dateFormat("%Y %B %e %H:%M", this.x) + '<br />';
-					$.each(this.points, function () {
+					$.each(this.points, function (i, point) {
+						s += '<span style="color:' + point.color + '">\u25CF\u00a0</span>';
 						if (formatters.hasOwnProperty(this.series.name)) {
 							s += formatters[this.series.name].NAME;
 						} else {
@@ -215,6 +216,7 @@ var chartEngineIniter = {
 											var value = result[accumulator].value;
 											if (value != null && value != '' && value != 'null') {
 												var calculatedValue = eval(result[accumulator].format);
+												s += '<span style="color:#f7f7f7">\u25CF\u00a0</span>';
 												if (calculatedValue == null || calculatedValue == '') {
 													s += accumulators[accumulator] + ': <b>' + value + '</b><br/>';
 												} else {

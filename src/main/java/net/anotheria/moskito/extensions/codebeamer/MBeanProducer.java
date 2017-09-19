@@ -8,7 +8,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
@@ -116,6 +123,16 @@ public enum MBeanProducer {
 		}, 0, 60 * 1000);
 	}
 
+	private JMXConnector connectWithTimeout(final JMXServiceURL url, final Map<String, String[]> env, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+	    ExecutorService executor = Executors.newSingleThreadExecutor();
+	        Future<JMXConnector> future = executor.submit(new Callable<JMXConnector>() {
+	            public JMXConnector call() throws IOException {
+	                return JMXConnectorFactory.connect(url, env);
+	            }
+	        });
+	    return future.get(timeout, unit);
+	}
+	
 	public void refreshMBeans() {
 		synchronized (lock) {
 			for (MBeanServer mBeanServer : mBeanServers) {
@@ -133,7 +150,7 @@ public enum MBeanProducer {
 							env.put(JMXConnector.CREDENTIALS, credentials);
 						}
 						
-						jmxConnector = JMXConnectorFactory.connect(serviceUrl, env);
+						jmxConnector = connectWithTimeout(serviceUrl, env, 10, TimeUnit.SECONDS);
 						
 					    server = jmxConnector.getMBeanServerConnection();
 	
@@ -169,7 +186,7 @@ public enum MBeanProducer {
 					    }
 					    break;
 					} catch (Exception ex) {
-			    		log.error("Error occurred when tried to otain MBean attributes.", ex);
+			    		log.error("Error occurred when tried to otain MBean attributes, attempts: " + i + 1, ex);
 			    		if (i <  THRESHOLD - 1) {
 				    		try {
 				    			// wait one second and try to connect to the server again
